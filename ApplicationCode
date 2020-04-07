@@ -1,0 +1,187 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.IO;
+using Excel = Microsoft.Office.Interop.Excel;
+using System.Reflection;
+using Microsoft.Office.Core;
+
+// This is the code for your desktop app.
+// Press Ctrl+F5 (or go to Debug > Start Without Debugging) to run your app.
+
+namespace DesktopApp1
+{
+    public partial class DogMomApp : Form
+    {
+        public DogMomApp()
+        {
+            InitializeComponent();
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            // Click on the link below to continue learning how to build a desktop app using WinForms!
+            System.Diagnostics.Process.Start("http://aka.ms/dotnet-get-started-desktop");
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var fileContent = string.Empty;
+            var filePath = string.Empty;
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = "c:\\";
+                openFileDialog.Filter = "All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 2;
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    //Get the path of specified file
+                    filePath = openFileDialog.FileName;
+                    var newFilePath = Path.ChangeExtension(filePath, ".csv");
+                    File.Move(filePath, newFilePath);
+                    if (checkBox1.Checked)
+                    {
+                        System.Diagnostics.Process.Start(newFilePath);
+                    }
+                    else { }
+                }
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            var fileContent = string.Empty;
+            var filePath = string.Empty;
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = "c:\\";
+                openFileDialog.Filter = "All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 2;
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    //Get the path of specified file
+                    filePath = openFileDialog.FileName;
+                    var newFilePath = Path.ChangeExtension(filePath, ".xls");
+                    File.Move(filePath, newFilePath);
+                    if (checkBox1.Checked)
+                    {
+                        System.Diagnostics.Process.Start(newFilePath);
+                    }
+                    else { }
+                }
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            var fileContent = string.Empty;
+            var filePath = string.Empty;
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = "c:\\";
+                openFileDialog.Filter = "All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 2;
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    //Get the path of specified file
+                    filePath = openFileDialog.FileName;
+                    var newFilePath = Path.ChangeExtension(filePath, ".ods");
+                    File.Move(filePath, newFilePath);
+                    if (checkBox1.Checked)
+                    {
+                        System.Diagnostics.Process.Start(newFilePath);
+                    }
+                    else { }
+                }
+            }
+        }      
+        private void button6_Click_2(object sender, EventArgs e)
+        {
+            string excelFile = string.Empty;
+            using (OpenFileDialog excelOpen = new OpenFileDialog())
+            {
+                excelOpen.InitialDirectory = "c:\\";
+                excelOpen.Filter = "Microsoft Excel Comma Separated Values Files (*.csv*)|*.csv*|All files (*.*)|*.*";
+                excelOpen.Title = "Please select your Excel file:";
+                if (excelOpen.ShowDialog() == DialogResult.OK)
+                {
+                    excelFile = excelOpen.FileName;
+                }
+            }
+            //ALT F11
+            //ALT I + M
+            Excel.Application oXL;
+            Excel._Workbook oWB;
+            Excel._Worksheet oSheet;
+            try
+            {
+                //string excelVBA;
+                //excelVBA = Properties.Resources.ExcelVBA;
+                //Clipboard.SetText(excelVBA);
+                //Start Excel and get Application object.                
+                oXL = new Excel.Application();
+                oXL.Visible = true;
+                oXL.WindowState = Excel.XlWindowState.xlMaximized;
+                //Get a new workbook.
+                oWB = oXL.Workbooks.Open(excelFile);
+                oSheet = (Excel._Worksheet)oWB.ActiveSheet;
+                oSheet.Name = textBox1.Text;
+                keyStrokes(oSheet);
+                //Keystrokes
+                //SendKeys.Send("%{F11}%{I}{M}");
+                //SendKeys.Send("^{v}");
+                //SendKeys.Send("{F5}");
+            }
+            catch (Exception theException)
+            {
+                String errorMessage;
+                errorMessage = "Error: ";
+                errorMessage = String.Concat(errorMessage, theException.Message);
+                errorMessage = String.Concat(errorMessage, " Line: ");
+                errorMessage = String.Concat(errorMessage, theException.Source);
+
+                MessageBox.Show(errorMessage, "Error");
+            }
+        }
+        private void keyStrokes(Excel._Worksheet oWS)
+        {
+            //Excel.Application oXL;
+            //Excel._Workbook oWB;
+            //Excel._Worksheet oSheet;
+            string sMsg;
+            sMsg = "Click YES to begin to begin the app.";
+
+            DialogResult iRet = MessageBox.Show(sMsg, "Excel Formatting",
+            MessageBoxButtons.YesNo);
+
+            if (iRet == DialogResult.Yes)
+            {
+                string excelVBA;
+                excelVBA = Properties.Resources.ExcelCode;
+                Clipboard.SetText(excelVBA);
+                SendKeys.Send("%{F11}%{I}{M}");
+                SendKeys.Send("^{v}");
+                SendKeys.Send("{F5}");
+            }
+            else
+            {
+                //
+            }
+
+            
+        }
+    }
+}
